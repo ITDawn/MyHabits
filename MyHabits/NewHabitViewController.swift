@@ -16,9 +16,6 @@ enum HabitSet {
 
 class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
-    
-   
-    
     var newHabit = Habit(name: "Выпить стакан воды", date: Date(), color: .systemPink)
     var cancellable: AnyCancellable?
     
@@ -157,35 +154,18 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
 
         view.backgroundColor = .white
         self.title = "Создать"
-        let navBar = UINavigationBar()
-        navBar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(navBar)
-        let navItem = UINavigationItem()
-        
-        let leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: UIBarButtonItem.Style.plain, target: self, action: #selector(back))
-        let rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: UIBarButtonItem.Style.done, target: self, action: #selector(saveTap(_:)))
-        leftBarButtonItem.tintColor = .systemPurple
-        rightBarButtonItem.tintColor = .systemPurple
-        navItem.rightBarButtonItem = rightBarButtonItem
-        navItem.leftBarButtonItem = leftBarButtonItem
+
         switch habitSet {
-            case .createHabit: navItem.title = "Создать"
-            case .editHabit: navItem.title = "Править"
+        case .createHabit: navigationController?.navigationItem.title = "Создать"
+            case .editHabit: navigationController?.navigationItem.title = "Править"
         }
-        
-        navBar.setItems([navItem], animated: true)
-        navBar.backgroundColor = .systemGray
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveTap(_:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(back))
         
         let constraints = [
-            
-            navBar.topAnchor.constraint(equalTo: view.topAnchor),
-                         navBar.heightAnchor.constraint(equalToConstant: 44),
-                         navBar.widthAnchor.constraint(equalTo: view.widthAnchor),
-            
-            nameLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 20),
+
+            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
             
@@ -229,7 +209,6 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         NSLayoutConstraint.activate(constraints)
         
     }
-    
   
     
     @objc func colorTapped() {
@@ -256,23 +235,28 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
     
     @objc func saveTap(_ sender: Any) {
         
+        let habitStore = HabitsStore.shared
         switch habitSet {
         case .createHabit: do {
             newHabit.name = nameTextField.text ?? ""
-            let store = HabitsStore.shared
-            store.habits.append(newHabit)
-            delegate1?.reloadView()
-            
+            habitStore.habits.append(newHabit)
+
             dismiss(animated: true, completion: nil)
+            delegate1?.reloadView()
+
         }
         case .editHabit: do {
+            habitStore.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
             newHabit.name = nameTextField.text ?? ""
             newHabit.date = timePicker.date
-            newHabit.color = picker.selectedColor
-           
-            delegate1?.reloadView()
+//            newHabit.color = picker.selectedColor
+            habitStore.habits.append(newHabit)
+
             dismiss(animated: true, completion: nil)
+            delegate1?.reloadView()
+
         }
+
     }
 }
 

@@ -10,14 +10,14 @@ protocol Callback {
     func callback()
 }
 
-class DetailViewController: UIViewController, Callback, UpdateCollectionView {
+class DetailViewController: UIViewController, Callback {
     
-    func reloadView() {
-        let vc = HabitsViewController()
-        vc.collectionView.reloadData()
-    }
+   
+    
+   
     
     
+    weak var delegate1: UpdateCollectionView?
     
     lazy var cellID = DetailTableViewCell()
     
@@ -57,6 +57,15 @@ class DetailViewController: UIViewController, Callback, UpdateCollectionView {
         self.navigationController?.navigationBar.prefersLargeTitles = false
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        delegate1?.reloadView()
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        delegate1?.reloadView()
+    }
+    
 
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -67,10 +76,7 @@ class DetailViewController: UIViewController, Callback, UpdateCollectionView {
     }()
     
     @objc func back() {
-        titleDelegate?.preferLargeTitle()
-        if titleDelegate?.preferLargeTitle() != nil {
-            print("rddhgkjjlkl;k;ljjghg")
-        }
+       
        dismiss(animated: true, completion: nil)
     }
     
@@ -85,7 +91,6 @@ class DetailViewController: UIViewController, Callback, UpdateCollectionView {
         vc.colorView.backgroundColor = habit.color
         vc.timePicker.date = habit.date
         vc.nameTextField.textColor = habit.color
-        vc.delegate1 = self
         vc.delegate2 = self
         self.navigationController?.pushViewController(vc, animated: true)
     }

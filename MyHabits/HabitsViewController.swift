@@ -10,15 +10,11 @@ import UIKit
 protocol UpdateCollectionView: AnyObject {
     func reloadView()
 }
-protocol LargeTitleDelegate: AnyObject {
-    func preferLargeTitle()
-}
 
-class HabitsViewController: UIViewController, UpdateCollectionView, UINavigationControllerDelegate, LargeTitleDelegate {
+
+class HabitsViewController: UIViewController, UpdateCollectionView, UINavigationControllerDelegate  {
     
-    func preferLargeTitle() {
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-    }
+    let details = DetailViewController()
     
     
     func reloadView() {
@@ -65,8 +61,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-
+        details.delegate1 = self
         view.addSubview(collectionView)
         view.backgroundColor = .white
         collectionView.reloadData()
@@ -76,10 +71,10 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
         self.collectionView.register(HabitsCell.self, forCellWithReuseIdentifier: cellID.identifier)
         self.collectionView.register(ProgressCell.self, forCellWithReuseIdentifier: proID.identifier)
         setUpViews()
-        preferLargeTitle()
 //        HabitsStore.shared.habits.removeAll()
         tabBar()
     }
+    
     
     func setUpViews() {
         
@@ -128,6 +123,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
             let habit = store.habits[indexPath.item]
             let vc = DetailViewController()
             vc.habit = habit
+            vc.delegate1 = self
             vc.titleDelegate = self
             let rootVC = UINavigationController(rootViewController: vc)
             rootVC.modalPresentationStyle = .overCurrentContext
@@ -153,8 +149,6 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     func tabBar() {
         guard let tabBar = self.tabBarController?.tabBar else {
             return }
-        collectionView.reloadData()
-
         tabBar.layer.masksToBounds = true
         tabBar.layer.cornerRadius = 30
     }
