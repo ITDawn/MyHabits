@@ -238,7 +238,12 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         let habitStore = HabitsStore.shared
         switch habitSet {
         case .createHabit: do {
-            newHabit.name = nameTextField.text ?? ""
+            if ((nameTextField.text?.contains("water")) != nil){
+                newHabit.name = "Получилось"
+            } else {
+                newHabit.name = "Ты лошара"
+            }
+//            newHabit.name = nameTextField.text ?? ""
             habitStore.habits.append(newHabit)
 
             dismiss(animated: true, completion: nil)
