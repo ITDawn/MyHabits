@@ -19,7 +19,7 @@ class ProgressCell: UICollectionViewCell {
         let label = UILabel()
         label.numberOfLines = 1
         label.text = "Все получится"
-        label.textColor = .gray
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 15, weight: .light)
         return label
@@ -39,15 +39,14 @@ class ProgressCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 15, weight: .light)
-        label.textColor = .gray
+        label.textColor = .white
         label.text = String(Int(HabitsStore.shared.todayProgress * 100)) + "%"
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 7
+        
         setupViews()
     }
     
@@ -55,33 +54,36 @@ class ProgressCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         super .init(coder: coder)
-        contentView.backgroundColor = .white
+        self.contentView.backgroundColor = UIColor(white: 0.8, alpha: 0.6)
         setupViews()
     }
     
     func setupViews() {
+        self.contentView.backgroundColor = UIColor(white: 0.8, alpha: 0.6)
+        self.contentView.layer.shadowOffset = CGSize(width: 6, height: 4)
+        self.contentView.layer.shadowRadius = 5
+        self.contentView.layer.shadowColor = UIColor.black.cgColor
+        self.contentView.layer.shadowOpacity = 0.7
+        self.contentView.layer.cornerRadius = 7
         
         self.contentView.addSubview(letsGoLabel)
         self.contentView.addSubview(progressSlider)
         self.contentView.addSubview(percentLabel)
-
-        let constraints = [
         
+        let constraints = [
+            
             letsGoLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
             letsGoLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
             letsGoLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
-            letsGoLabel.heightAnchor.constraint(equalToConstant: 15),
             
             progressSlider.topAnchor.constraint(equalTo: letsGoLabel.bottomAnchor, constant: 10),
             progressSlider.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
-            progressSlider.heightAnchor.constraint(equalToConstant: 10),
             progressSlider.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
-            progressSlider.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10),
+            progressSlider.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -15),
             
             percentLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
-            percentLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
-            percentLabel.heightAnchor.constraint(equalToConstant: 15)
-
+            percentLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
+            
         ]
         NSLayoutConstraint.activate(constraints)
     }

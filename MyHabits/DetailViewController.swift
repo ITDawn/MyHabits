@@ -12,17 +12,12 @@ protocol Callback {
 
 class DetailViewController: UIViewController, Callback {
     
-   
-    
-   
-    
-    
     weak var delegate1: UpdateCollectionView?
     
     lazy var cellID = DetailTableViewCell()
     
     func callback() {
-            navigationController?.popToRootViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     weak var titleDelegate: HabitsViewController?
@@ -33,23 +28,11 @@ class DetailViewController: UIViewController, Callback {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    var habit = Habit(name: "Выпить стакан воды перед завтраком", date: Date(), color: .systemRed)
+    var habit = Habit(name: "Выпить стакан воды перед завтраком", date: Date(),icon: "",  color: .systemRed)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(tableView)
-        self.view.backgroundColor = .white
-        self.title = "Активность"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(editPress(_:)))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Сегодня", style: .done, target: self, action: #selector(back))
-        let backButton = UIBarButtonItem()
-        backButton.title = "My Back Button Title"
-        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: cellID.identifier)
+       
         setUpViews()
     }
     
@@ -76,14 +59,12 @@ class DetailViewController: UIViewController, Callback {
     }()
     
     @objc func back() {
-       
-       dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     
     
-    
+    /// Изменение привычки
     @objc func editPress(_ sender: Any) {
-        
         let vc = NewHabitViewController()
         vc.newHabit = habit
         vc.habitSet = .editHabit
@@ -92,15 +73,32 @@ class DetailViewController: UIViewController, Callback {
         vc.timePicker.date = habit.date
         vc.nameTextField.textColor = habit.color
         vc.delegate2 = self
-        self.navigationController?.pushViewController(vc, animated: true)
+        let rootVC = UINavigationController(rootViewController: vc)
+        rootVC.modalPresentationStyle = .overCurrentContext
+        rootVC.modalTransitionStyle = .coverVertical
+        present(rootVC, animated: true, completion: nil)
     }
     
     func setUpViews() {
+        
+        self.view.addSubview(tableView)
+        self.view.backgroundColor = .white
+        self.title = "Активность"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Править", style: .done, target: self, action: #selector(editPress(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Сегодня", style: .done, target: self, action: #selector(back))
+        let backButton = UIBarButtonItem()
+        backButton.title = "My Back Button Title"
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: cellID.identifier)
+        
         let constraints = [
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
         NSLayoutConstraint.activate(constraints)
     }
@@ -117,9 +115,14 @@ extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
                 countDates += 1
             }
         }
-        return HabitsStore.shared.dates.count
+        if self.view.frame.height < 700 {
+            return min(9, HabitsStore.shared.dates.count)
+        } else if self.view.frame.height > 900 {
+            return min(20, HabitsStore.shared.dates.count)
+        } else  {
+            return min(15, HabitsStore.shared.dates.count)
+        }
     }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
     }

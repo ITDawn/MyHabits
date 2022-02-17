@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        UITabBar.appearance().barTintColor = .white
+        UITabBar.appearance().barTintColor = UIColor(patternImage: UIImage(named: "10")!)
         UITabBar.appearance().tintColor = .purple
         
         UINavigationBar.appearance().tintColor = .purple

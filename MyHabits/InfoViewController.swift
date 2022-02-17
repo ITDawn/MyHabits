@@ -97,6 +97,10 @@ class InfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViews()
+    }
+    
+    func setUpViews() {
         view.backgroundColor = .white
         self.title = "Информация"
         view.addSubview(scrollView)
@@ -151,11 +155,7 @@ class InfoViewController: UIViewController {
             descriptionLabel5.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             descriptionLabel5.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
 
-            
-        
         ]
         NSLayoutConstraint.activate(constraints)
     }
-    
-
 }

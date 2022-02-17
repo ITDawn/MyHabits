@@ -14,9 +14,10 @@ enum HabitSet {
 }
 
 
-class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
+public class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
-    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), color: .systemPink)
+//    var newHabit = Habit(name: "Выпить стакан воды", date: Date(),  color: .systemPink)
+    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .systemRed)
     var cancellable: AnyCancellable?
     
     var habitSet = HabitSet.createHabit
@@ -32,6 +33,16 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter
+    }()
+    
+    let deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.isHidden = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Удалить привычку", for: .normal)
+        button.tintColor = .red
+        button.addTarget(self, action: #selector(deleteHabit), for: .touchUpInside)
+        return button
     }()
     
     var nameLabel: UILabel = {
@@ -53,6 +64,7 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     var timeLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -62,6 +74,7 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     var everyDayLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -72,9 +85,10 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         return label
     }()
     
-    var nameTextField: UITextField = {
+   public var nameTextField: UITextField = {
         var textField = UITextField()
         let paddingView: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
+       textField.layer.cornerRadius = 7
         textField.leftView = paddingView
         textField.leftViewMode = .always
         textField.placeholder = "Бегать по утрам, спасть 8 часов и т.п."
@@ -113,6 +127,7 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
+    
     let circleImage: UIImageView = {
         let doneImage = UIImageView()
         doneImage.contentMode = .scaleToFill
@@ -132,11 +147,17 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
     let picker = UIColorPickerViewController()
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
+       setUpView()
+    }
+    
+    
+    func setUpView() {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(colorTapped))
         colorView.addGestureRecognizer(gesture)
         gesture.numberOfTouchesRequired = 1
@@ -151,13 +172,15 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         view.addSubview(everyDayLabel)
         view.addSubview(pickedTimdeLabel)
         view.addSubview(circleImage)
-
-        view.backgroundColor = .white
+        view.addSubview(deleteButton)
+        view.backgroundColor = .systemGray5
         self.title = "Создать"
 
         switch habitSet {
         case .createHabit: navigationController?.navigationItem.title = "Создать"
-            case .editHabit: navigationController?.navigationItem.title = "Править"
+            case .editHabit:
+            deleteButton.isHidden = false
+            navigationController?.navigationItem.title = "Править"
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveTap(_:)))
@@ -165,13 +188,14 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
         
         let constraints = [
 
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
             
             nameTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 15),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
-            nameTextField.heightAnchor.constraint(equalToConstant: 20),
+            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
+            nameTextField.heightAnchor.constraint(equalToConstant: 40),
             
             colorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 15),
             colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
@@ -198,57 +222,67 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
             timePicker.topAnchor.constraint(equalTo: everyDayLabel.bottomAnchor, constant: 30),
             timePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
             timePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17),
-            timePicker.heightAnchor.constraint(equalToConstant: 300),
+            timePicker.heightAnchor.constraint(equalToConstant: self.view.frame.width * 0.6),
+            
+            deleteButton.topAnchor.constraint(equalTo: timePicker.bottomAnchor, constant: 100),
+            deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
             
             circleImage.centerYAnchor.constraint(equalTo: colorView.centerYAnchor),
             circleImage.centerXAnchor.constraint(equalTo: colorView.centerXAnchor),
             circleImage.heightAnchor.constraint(equalToConstant: 41),
             circleImage.widthAnchor.constraint(equalTo: circleImage.heightAnchor)
-            
         ]
         NSLayoutConstraint.activate(constraints)
         
     }
   
-    
+    /// Вызов pickerViewController
     @objc func colorTapped() {
-        print("hello")
         self.present(picker, animated: true, completion: nil)
     }
     
-    func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
+public  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
                 self.colorView.backgroundColor = viewController.selectedColor
         newHabit.color = viewController.selectedColor
         }
-    
+    /// Закрытие NewHabitViewController
     @objc func back() {
+        let vc = HabitsViewController()
+        vc.tabBarController?.tabBar.isHidden = false
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func tap() {
-        let nc2 = UINavigationController(rootViewController: EditViewController())
-        nc2.modalPresentationStyle = .overFullScreen
-        nc2.modalTransitionStyle = .crossDissolve
-        present(nc2, animated: true, completion: nil)
-
+    /// Удаление привычки
+    @objc func deleteHabit() {
+        let alertVC = UIAlertController(title: "Удалить привычку?", message:"привычка '\(nameTextField.text ?? "")' будет удалена", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { _ in
+        }
+        
+        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            HabitsStore.shared.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
+            self.delegate2?.callback()
+//            self.delegate1?.reloadView()
+            self.dismiss(animated: true, completion: nil)
+        }
+        alertVC.addAction(cancelAction)
+        alertVC.addAction(deleteAction)
+        self.present(alertVC, animated: true, completion: nil)
     }
-    
+
+    /// Сохранение или изменение привычки
     @objc func saveTap(_ sender: Any) {
         
         let habitStore = HabitsStore.shared
         switch habitSet {
         case .createHabit: do {
-            if ((nameTextField.text?.contains("water")) != nil){
-                newHabit.name = "Получилось"
-            } else {
-                newHabit.name = "Ты лошара"
-            }
-//            newHabit.name = nameTextField.text ?? ""
+            
+            newHabit.name = nameTextField.text ?? ""
             habitStore.habits.append(newHabit)
-
+            navigationController?.popViewController(animated: true)
             dismiss(animated: true, completion: nil)
             delegate1?.reloadView()
-
         }
         case .editHabit: do {
             habitStore.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
@@ -256,7 +290,7 @@ class NewHabitViewController: UIViewController, UIColorPickerViewControllerDeleg
             newHabit.date = timePicker.date
 //            newHabit.color = picker.selectedColor
             habitStore.habits.append(newHabit)
-
+            delegate2?.callback()
             dismiss(animated: true, completion: nil)
             delegate1?.reloadView()
 
