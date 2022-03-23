@@ -1,16 +1,16 @@
 {
   "images" : [
     {
-      "idiom" : "iphone",
+      "filename" : "22.jpg",
+      "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "idiom" : "iphone",
+      "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "rickDrink.png",
-      "idiom" : "iphone",
+      "idiom" : "universal",
       "scale" : "3x"
     }
   ],

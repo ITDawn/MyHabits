@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        UITabBar.appearance().barTintColor = UIColor(patternImage: UIImage(named: "10")!)
+        UITabBar.appearance().barTintColor = UIColor(patternImage: UIImage(named: "22")!)
         UITabBar.appearance().tintColor = .purple
         
         UINavigationBar.appearance().tintColor = .purple
@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
           let firstVC = HabitsViewController()
           firstVC.tabBarItem = UITabBarItem(title: "Приввычки", image: UIImage.init(systemName: "square.stack.3d.up.fill"), tag: 0)
+       
           let secondVC = InfoViewController()
           secondVC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage.init(systemName: "info.circle.fill"), tag: 1)
           let firstNavController = UINavigationController(rootViewController: firstVC)

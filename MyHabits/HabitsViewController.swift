@@ -26,7 +26,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     let cellID = HabitsCell()
     let proID = ProgressCell()
     
-    
+     
     private lazy var store = HabitsStore.shared
     
     public lazy var collectionView: UICollectionView = {
@@ -43,7 +43,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     let backGroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "2")!)
+        view.backgroundColor = UIColor(patternImage: UIImage(named: "44")!)
         return view
     }()
     
@@ -57,6 +57,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     
     
     func setUpViews() {
+        
         details.delegate1 = self
         view.addSubview(backGroundView)
         backGroundView.addSubview(collectionView)
@@ -134,10 +135,23 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     func tabBar() {
         guard let tabBar = self.tabBarController?.tabBar else {
             return }
-        tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "10")!)
+        tabBar.frame = CGRect(x: self.view.frame.width * 0.03, y: self.view.frame.height * 0.883, width: self.view.frame.width * 0.935, height: self.view.frame.height * 0.1)
+//        tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
         tabBar.layer.masksToBounds = true
-        tabBar.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
-        tabBar.layer.cornerRadius = tabBar.frame.height * 0.3
+        tabBar.layer.borderWidth = 1
+        tabBar.layer.borderColor = UIColor(white: 1, alpha: 0.7).cgColor
+        
+       
+//            let blur = UIBlurEffect(style: .regular)
+//
+//            let visualEffect = UIVisualEffectView(effect: blur)
+//            visualEffect.frame = tabBar.bounds
+//            visualEffect.translatesAutoresizingMaskIntoConstraints = false
+//            visualEffect.layer.cornerRadius = 7
+//            visualEffect.layer.masksToBounds = true
+//            tabBar.addSubview(visualEffect)
+        
+        tabBar.layer.cornerRadius = tabBar.frame.height * 0.4
     }
     
 }
@@ -194,6 +208,11 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
+
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         if section == 0 {
             
@@ -201,7 +220,7 @@ extension HabitsViewController: UICollectionViewDelegateFlowLayout {
         }
         else {
             
-            return UIEdgeInsets(top: 18, left: 16, bottom: 12, right: 16)
+            return UIEdgeInsets(top: 22, left: 16, bottom: 16, right: 16)
         }
     }
 }

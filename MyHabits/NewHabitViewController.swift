@@ -17,7 +17,7 @@ enum HabitSet {
 public class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
 //    var newHabit = Habit(name: "Выпить стакан воды", date: Date(),  color: .systemPink)
-    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .systemRed)
+    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .systemBlue)
     var cancellable: AnyCancellable?
     
     var habitSet = HabitSet.createHabit
@@ -113,7 +113,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     
     let colorView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemRed
+        view.backgroundColor = .systemBlue
         view.layer.cornerRadius = 20
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

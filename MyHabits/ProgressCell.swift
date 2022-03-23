@@ -46,7 +46,7 @@ class ProgressCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        blurEffect()
         setupViews()
     }
     
@@ -54,12 +54,23 @@ class ProgressCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         super .init(coder: coder)
-        self.contentView.backgroundColor = UIColor(white: 0.8, alpha: 0.6)
+        self.contentView.backgroundColor = UIColor(white: 0.3, alpha: 0.1)
         setupViews()
+        blurEffect()
+    }
+    
+    func blurEffect() {
+        let blur = UIBlurEffect(style: .regular)
+        let visualEffect = UIVisualEffectView(effect: blur)
+        visualEffect.frame = contentView.bounds
+        visualEffect.translatesAutoresizingMaskIntoConstraints = false
+        visualEffect.layer.cornerRadius = 7
+        visualEffect.layer.masksToBounds = true
+        contentView.addSubview(visualEffect)
     }
     
     func setupViews() {
-        self.contentView.backgroundColor = UIColor(white: 0.8, alpha: 0.6)
+        self.contentView.backgroundColor = UIColor(white: 0.3, alpha: 0.1)
         self.contentView.layer.shadowOffset = CGSize(width: 6, height: 4)
         self.contentView.layer.shadowRadius = 5
         self.contentView.layer.shadowColor = UIColor.black.cgColor
