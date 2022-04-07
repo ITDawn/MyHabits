@@ -188,14 +188,14 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         
         let constraints = [
 
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            nameLabel.heightAnchor.constraint(equalToConstant: 20),
+            nameLabel.bottomAnchor.constraint(equalTo: nameTextField.topAnchor, constant: -10),
             
-            nameTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 15),
+            nameTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 1),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
-            nameTextField.heightAnchor.constraint(equalToConstant: 40),
+            nameTextField.bottomAnchor.constraint(equalTo: colorLabel.topAnchor, constant: -20),
             
             colorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 15),
             colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),

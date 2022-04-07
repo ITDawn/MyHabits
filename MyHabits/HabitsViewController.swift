@@ -51,7 +51,8 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
-//                HabitsStore.shared.habits.removeAll()
+        print(self.view.frame.width)
+                HabitsStore.shared.habits.removeAll()
         tabBar()
     }
     
@@ -135,23 +136,24 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     func tabBar() {
         guard let tabBar = self.tabBarController?.tabBar else {
             return }
-        tabBar.frame = CGRect(x: self.view.frame.width * 0.03, y: self.view.frame.height * 0.883, width: self.view.frame.width * 0.935, height: self.view.frame.height * 0.1)
-//        tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
+        if self.view.frame.width > 500 {
+            tabBar.frame = CGRect(x: 2, y: 3, width: 300, height: 200)
+            tabBar.layer.cornerRadius = tabBar.frame.height * 0.5
+
+        } else {
+            tabBar.frame = CGRect(x: self.view.frame.width * 0.021, y: self.view.frame.height * 0.883, width: self.view.frame.width * 0.96, height: self.view.frame.height * 0.11)
+            tabBar.layer.cornerRadius = tabBar.frame.height * 0.4
+
+        }
+       
+        tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
         tabBar.layer.masksToBounds = true
         tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor(white: 1, alpha: 0.7).cgColor
+       
+        
         
        
-//            let blur = UIBlurEffect(style: .regular)
-//
-//            let visualEffect = UIVisualEffectView(effect: blur)
-//            visualEffect.frame = tabBar.bounds
-//            visualEffect.translatesAutoresizingMaskIntoConstraints = false
-//            visualEffect.layer.cornerRadius = 7
-//            visualEffect.layer.masksToBounds = true
-//            tabBar.addSubview(visualEffect)
-        
-        tabBar.layer.cornerRadius = tabBar.frame.height * 0.4
     }
     
 }

@@ -15,19 +15,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         UITabBar.appearance().barTintColor = UIColor(patternImage: UIImage(named: "22")!)
+        
+
         UITabBar.appearance().tintColor = .purple
+        
+       
         
         UINavigationBar.appearance().tintColor = .purple
           guard let scene = (scene as? UIWindowScene) else { return }
           window = UIWindow(windowScene: scene)
           window?.makeKeyAndVisible()
           let tabBarController = UITabBarController()
+        let blur = UIBlurEffect(style: .regular)
+
+            let visualEffect = UIVisualEffectView(effect: blur)
+        visualEffect.frame = CGRect(x: 0, y: 0, width: 600, height: 100)
+            visualEffect.translatesAutoresizingMaskIntoConstraints = false
+            visualEffect.layer.cornerRadius = 7
+            visualEffect.layer.masksToBounds = true
+        tabBarController.tabBar.addSubview(visualEffect)
+//        tabBarController.tabBar.frame = CGRect(x: 1, y: 1, width: 200, height: 300)
+      
+        
         
           let firstVC = HabitsViewController()
-          firstVC.tabBarItem = UITabBarItem(title: "Приввычки", image: UIImage.init(systemName: "square.stack.3d.up.fill"), tag: 0)
        
+          firstVC.tabBarItem = UITabBarItem(title: "Приввычки", image: UIImage(systemName: "rectangle.grid.1x2.fill"), tag: 0)
+        
+        
           let secondVC = InfoViewController()
-          secondVC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage.init(systemName: "info.circle.fill"), tag: 1)
+          secondVC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage(systemName: "info.circle.fill"), tag: 1)
           let firstNavController = UINavigationController(rootViewController: firstVC)
           firstNavController.navigationController?.navigationBar.prefersLargeTitles = true
           let secNavController = UINavigationController(rootViewController: secondVC)
