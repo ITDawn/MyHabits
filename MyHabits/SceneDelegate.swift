@@ -34,7 +34,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             visualEffect.layer.cornerRadius = 7
             visualEffect.layer.masksToBounds = true
         tabBarController.tabBar.addSubview(visualEffect)
-//        tabBarController.tabBar.frame = CGRect(x: 1, y: 1, width: 200, height: 300)
       
         
         

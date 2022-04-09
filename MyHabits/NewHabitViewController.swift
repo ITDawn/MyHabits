@@ -17,7 +17,7 @@ enum HabitSet {
 public class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
 //    var newHabit = Habit(name: "Выпить стакан воды", date: Date(),  color: .systemPink)
-    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .systemBlue)
+    var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .cyan)
     var cancellable: AnyCancellable?
     
     var habitSet = HabitSet.createHabit
@@ -95,7 +95,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         textField.clearButtonMode = .always
         textField.textColor = .systemGray4
         textField.backgroundColor = .white
-        textField.textColor = .systemBlue
+        textField.textColor = .cyan
         textField.layer.borderColor = UIColor.black.cgColor
         textField.font = UIFont.boldSystemFont(ofSize: 18)
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -113,8 +113,12 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     
     let colorView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = .cyan
         view.layer.cornerRadius = 20
+        view.layer.shadowOffset = CGSize(width: 3, height: 3)
+        view.layer.shadowRadius = 2
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.3
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -133,6 +137,10 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         doneImage.contentMode = .scaleToFill
         doneImage.image = UIImage(systemName: "circle")
         doneImage.tintColor = .white
+        doneImage.layer.shadowOffset = CGSize(width: 3, height: 3)
+        doneImage.layer.shadowRadius = 2
+        doneImage.layer.shadowColor = UIColor.black.cgColor
+        doneImage.layer.shadowOpacity = 0.3
         doneImage.image?.withTintColor(UIColor.white)
         doneImage.translatesAutoresizingMaskIntoConstraints = false
         return doneImage
@@ -159,6 +167,12 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     
     func setUpView() {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(colorTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textFieldTap(tapGestureRecognizer:)))
+        let viewGesture = UITapGestureRecognizer(target: self, action: #selector(viewTap(tapGestureRecognizer:)))
+        self.view.addGestureRecognizer(viewGesture)
+       
+        
+        nameTextField.addGestureRecognizer(tapGesture)
         colorView.addGestureRecognizer(gesture)
         gesture.numberOfTouchesRequired = 1
         picker.delegate = self
@@ -188,51 +202,55 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         
         let constraints = [
 
-            nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
-            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            nameLabel.bottomAnchor.constraint(equalTo: nameTextField.topAnchor, constant: -10),
+            nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
+            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            nameLabel.bottomAnchor.constraint(equalTo: nameTextField.topAnchor, constant: -20),
             
-            nameTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 1),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
+            nameTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
+            nameTextField.heightAnchor.constraint(equalToConstant: 40),
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             nameTextField.bottomAnchor.constraint(equalTo: colorLabel.topAnchor, constant: -20),
             
-            colorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 15),
-            colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            colorLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            colorView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 15),
-            colorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            colorView.heightAnchor.constraint(equalToConstant: 40),
+            colorLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 20),
+            colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            colorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            colorLabel.bottomAnchor.constraint(equalTo: colorView.topAnchor, constant: -20),
+
+            colorView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 20),
+            colorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             colorView.widthAnchor.constraint(equalToConstant: 40),
-            
-            timeLabel.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: 15),
-            timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
+            colorView.heightAnchor.constraint(equalTo: colorView.widthAnchor),
+            colorView.bottomAnchor.constraint(equalTo: timeLabel.topAnchor, constant: -20),
+
+            circleImage.centerYAnchor.constraint(equalTo: colorView.centerYAnchor),
+            circleImage.centerXAnchor.constraint(equalTo: colorView.centerXAnchor),
+            circleImage.heightAnchor.constraint(equalToConstant: 35),
+            circleImage.widthAnchor.constraint(equalTo: circleImage.heightAnchor),
+
+            timeLabel.topAnchor.constraint(equalTo: colorView.bottomAnchor, constant: 20),
+            timeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             timeLabel.heightAnchor.constraint(equalToConstant: 20),
-            
-            everyDayLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 15),
-            everyDayLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            everyDayLabel.heightAnchor.constraint(equalToConstant: 20),
-            everyDayLabel.widthAnchor.constraint(equalToConstant: 150),
-            
-            pickedTimdeLabel.leadingAnchor.constraint(equalTo: everyDayLabel.trailingAnchor),
+            timeLabel.bottomAnchor.constraint(equalTo: everyDayLabel.topAnchor, constant: -20),
+
+            everyDayLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 20),
+            everyDayLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            everyDayLabel.trailingAnchor.constraint(equalTo: pickedTimdeLabel.leadingAnchor, constant: -20),
+            everyDayLabel.bottomAnchor.constraint(equalTo: timePicker.topAnchor, constant: -20),
+
+            pickedTimdeLabel.leadingAnchor.constraint(equalTo: everyDayLabel.trailingAnchor, constant: 20),
             pickedTimdeLabel.centerYAnchor.constraint(equalTo: everyDayLabel.centerYAnchor),
-            
-            
-            timePicker.topAnchor.constraint(equalTo: everyDayLabel.bottomAnchor, constant: 30),
-            timePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 17),
-            timePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -17),
-            timePicker.heightAnchor.constraint(equalToConstant: self.view.frame.width * 0.6),
+
+            timePicker.topAnchor.constraint(equalTo: everyDayLabel.bottomAnchor, constant: 20),
+            timePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            timePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            timePicker.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -100),
             
             deleteButton.topAnchor.constraint(equalTo: timePicker.bottomAnchor, constant: 100),
             deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
-            
-            circleImage.centerYAnchor.constraint(equalTo: colorView.centerYAnchor),
-            circleImage.centerXAnchor.constraint(equalTo: colorView.centerXAnchor),
-            circleImage.heightAnchor.constraint(equalToConstant: 41),
-            circleImage.widthAnchor.constraint(equalTo: circleImage.heightAnchor)
+
         ]
         NSLayoutConstraint.activate(constraints)
         
@@ -245,6 +263,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     
 public  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
                 self.colorView.backgroundColor = viewController.selectedColor
+    self.nameTextField.textColor = viewController.selectedColor
         newHabit.color = viewController.selectedColor
         }
     /// Закрытие NewHabitViewController
@@ -298,6 +317,43 @@ public  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPi
 
     }
 }
+    @objc func textFieldTap(tapGestureRecognizer: UITapGestureRecognizer) {
+        
+        nameTextField.becomeFirstResponder()
+        UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: [],
+                                animations: {
+            self.nameTextField.layer.shadowOffset = CGSize(width: 4, height: 4)
+            self.nameTextField.layer.shadowRadius = 6
+            self.nameTextField.layer.shadowColor = UIColor.black.cgColor
+            self.nameTextField.layer.shadowOpacity = 0.5
+
+        }, completion: {
+            finished in
+            
+            
+        })
+       
+
+    }
+    
+    @objc func viewTap(tapGestureRecognizer: UITapGestureRecognizer) {
+       
+        nameTextField.resignFirstResponder()
+        UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: [],
+                                animations: {
+            self.nameTextField.layer.shadowOffset = CGSize(width: 0, height: 0)
+            self.nameTextField.layer.shadowRadius = 0
+            self.nameTextField.layer.shadowColor = UIColor.black.cgColor
+            self.nameTextField.layer.shadowOpacity = 0
+
+        }, completion: {
+            finished in
+            
+            
+        })
+       
+
+    }
 
 @objc func datePickerChanged(picker: UIDatePicker) {
     switch habitSet {

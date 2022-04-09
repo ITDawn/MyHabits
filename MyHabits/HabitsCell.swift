@@ -36,7 +36,11 @@ class HabitsCell: UICollectionViewCell {
         label.numberOfLines = 1
         label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.layer.shadowOffset = CGSize(width: 2, height: 2)
+        label.layer.shadowRadius = 3
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOpacity = 1
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         return label
     }()
     
@@ -135,7 +139,7 @@ extension HabitsCell {
         self.contentView.addSubview(iconImage)
        
         circleView.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
-        doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
+        doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 38, height: 38)
         
         let constraints = [
             
@@ -242,13 +246,17 @@ extension HabitsCell {
             
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
                 if self.habit.isAlreadyTakenToday {
-                    print("Habit is already taken today")
+                    print("Выполнена")
                 } else {
                     HabitsStore.shared.track(self.habit)
                     
                     self.circleView.backgroundColor = self.habit.color
                     self.circleView.frame = CGRect(x: self.contentView.frame.width - 70, y: 20, width: 60, height: 60)
                     self.doneImage.frame = CGRect(x: self.contentView.frame.width - 70, y: 20, width: 60, height: 60)
+                    self.doneImage.layer.shadowOffset = CGSize(width: 1.5, height: 1)
+                    self.doneImage.layer.shadowRadius = 0.1
+                    self.doneImage.layer.shadowColor = UIColor.black.cgColor
+                    self.doneImage.layer.shadowOpacity = 0.6
                     self.circleView.layoutIfNeeded()
                     self.circleView.layer.cornerRadius = 30
                 }
@@ -259,7 +267,7 @@ extension HabitsCell {
             
             UIView.animate(withDuration: 0.5) { [self] in
                 circleView.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
-                doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
+                doneImage.frame = CGRect(x: self.contentView.frame.width - 59, y: 51, width: 38, height: 38)
                 
                 self.circleView.layer.cornerRadius = 20
 
