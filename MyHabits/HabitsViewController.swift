@@ -52,7 +52,7 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
         super.viewDidLoad()
         setUpViews()
         print(self.view.frame.width)
-                HabitsStore.shared.habits.removeAll()
+//                HabitsStore.shared.habits.removeAll()
         tabBar()
     }
    

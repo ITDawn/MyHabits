@@ -140,7 +140,7 @@ extension HabitsCell {
         self.contentView.addSubview(iconImage)
        
         circleView.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
-        doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 38, height: 38)
+        doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
         
         let constraints = [
             
