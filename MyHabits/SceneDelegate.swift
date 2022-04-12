@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let blur = UIBlurEffect(style: .regular)
 
             let visualEffect = UIVisualEffectView(effect: blur)
-        visualEffect.frame = CGRect(x: 0, y: 0, width: 600, height: 100)
+        visualEffect.frame = CGRect(x: 0, y: 0, width: 768, height: 100)
             visualEffect.translatesAutoresizingMaskIntoConstraints = false
             visualEffect.layer.cornerRadius = 7
             visualEffect.layer.masksToBounds = true

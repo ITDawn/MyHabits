@@ -16,7 +16,6 @@ enum HabitSet {
 
 public class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
     
-//    var newHabit = Habit(name: "Выпить стакан воды", date: Date(),  color: .systemPink)
     var newHabit = Habit(name: "Выпить стакан воды", date: Date(), icon: "", color: .cyan)
     var cancellable: AnyCancellable?
     
@@ -307,7 +306,6 @@ public  func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPi
             habitStore.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
             newHabit.name = nameTextField.text ?? ""
             newHabit.date = timePicker.date
-//            newHabit.color = picker.selectedColor
             habitStore.habits.append(newHabit)
             delegate2?.callback()
             dismiss(animated: true, completion: nil)

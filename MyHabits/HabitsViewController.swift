@@ -52,18 +52,18 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
         super.viewDidLoad()
         setUpViews()
         print(self.view.frame.width)
-//                HabitsStore.shared.habits.removeAll()
+                HabitsStore.shared.habits.removeAll()
         tabBar()
     }
+   
     
     
     func setUpViews() {
-        
+     
         details.delegate1 = self
         view.addSubview(backGroundView)
         backGroundView.addSubview(collectionView)
         self.view.backgroundColor = .white
-        collectionView.reloadData()
         self.navigationItem.title = "Сегодня"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(tap))
         self.collectionView.register(HabitsCell.self, forCellWithReuseIdentifier: cellID.identifier)
@@ -137,19 +137,16 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
         guard let tabBar = self.tabBarController?.tabBar else {
             return }
         if self.view.frame.width > 500 {
-            tabBar.frame = CGRect(x: 2, y: 3, width: 300, height: 200)
-            tabBar.layer.cornerRadius = tabBar.frame.height * 0.5
+            tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "33")!)
 
         } else {
             tabBar.frame = CGRect(x: self.view.frame.width * 0.021, y: self.view.frame.height * 0.883, width: self.view.frame.width * 0.96, height: self.view.frame.height * 0.11)
             tabBar.layer.cornerRadius = tabBar.frame.height * 0.4
-
+            tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
+            tabBar.layer.masksToBounds = true
+            tabBar.layer.borderWidth = 1
+            tabBar.layer.borderColor = UIColor(white: 1, alpha: 0.7).cgColor
         }
-       
-        tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
-        tabBar.layer.masksToBounds = true
-        tabBar.layer.borderWidth = 1
-        tabBar.layer.borderColor = UIColor(white: 1, alpha: 0.7).cgColor
        
         
         
@@ -186,18 +183,23 @@ extension HabitsViewController: UICollectionViewDataSource {
             let habit = store.habits[indexPath.item]
             
             habitCell.configure(habit: habit)
+           
             habitCell.cellTap = { [weak self] in
+                
                 self?.collectionView.reloadData()
             }
             return habitCell
         }
     }
-    
-}
+    }
 
 
 extension HabitsViewController: UICollectionViewDelegateFlowLayout {
-    
+//    
+//    func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveOfItemFromOriginalIndexPath originalIndexPath: IndexPath, atCurrentIndexPath currentIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+//        let mover = 
+//        
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == 0 {

@@ -11,6 +11,7 @@ class HabitsCell: UICollectionViewCell {
     let identifier = "cellId"
     let textfield = NewHabitViewController().nameTextField
     var cellTap: (() -> Void)?
+    weak var delegate1: UpdateCollectionView?
     
     var gesture = UITapGestureRecognizer()
     
@@ -239,44 +240,40 @@ extension HabitsCell {
     
     /// Анимация выполнения привычки
     @objc func habitTap(tapGestureRecognizer: UITapGestureRecognizer) {
-       
-
+        let serialQueue = DispatchQueue.main
+        
+        serialQueue.async {
+           
+        if self.habit.isAlreadyTakenToday {
+            print("Выполнена")
+        } else {
         UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: [],
                                 animations: {
-            
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) {
-                if self.habit.isAlreadyTakenToday {
-                    print("Выполнена")
-                } else {
                     HabitsStore.shared.track(self.habit)
-                    
                     self.circleView.backgroundColor = self.habit.color
                     self.circleView.frame = CGRect(x: self.contentView.frame.width - 70, y: 20, width: 60, height: 60)
                     self.doneImage.frame = CGRect(x: self.contentView.frame.width - 70, y: 20, width: 60, height: 60)
-                    self.doneImage.layer.shadowOffset = CGSize(width: 1.5, height: 1)
-                    self.doneImage.layer.shadowRadius = 0.1
-                    self.doneImage.layer.shadowColor = UIColor.black.cgColor
-                    self.doneImage.layer.shadowOpacity = 0.6
+//                    self.doneImage.layer.shadowOffset = CGSize(width: 1.5, height: 1)
+//                    self.doneImage.layer.shadowRadius = 0.1
+//                    self.doneImage.layer.shadowColor = UIColor.black.cgColor
+//                    self.doneImage.layer.shadowOpacity = 0.6
                     self.circleView.layoutIfNeeded()
                     self.circleView.layer.cornerRadius = 30
-                }
             }
-
         }, completion: {
             finished in
-            
             UIView.animate(withDuration: 0.5) { [self] in
                 circleView.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
-                doneImage.frame = CGRect(x: self.contentView.frame.width - 59, y: 51, width: 38, height: 38)
-                
+                doneImage.frame = CGRect(x: self.contentView.frame.width - 60, y: 50, width: 40, height: 40)
                 self.circleView.layer.cornerRadius = 20
-
             }
         })
-        if self.circleView.backgroundColor != .white {
-           cellTap?()
         }
-
+        }
+        serialQueue.asyncAfter(deadline: .now() + 0.4, execute: {
+            self.cellTap?()
+        })
     }
 }
 
