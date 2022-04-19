@@ -171,7 +171,6 @@ extension HabitsViewController: UICollectionViewDataSource {
         return 2
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.section == 0 {

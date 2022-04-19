@@ -109,7 +109,7 @@ class HabitsCell: UICollectionViewCell {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(habitTap(tapGestureRecognizer:)))
         
-        
+    
         circleView.addGestureRecognizer(tapGesture)
         gesture.numberOfTapsRequired = 1
         gesture.numberOfTouchesRequired = 1

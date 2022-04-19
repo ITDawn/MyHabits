@@ -92,7 +92,6 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         textField.leftViewMode = .always
         textField.placeholder = "Бегать по утрам, спасть 8 часов и т.п."
         textField.clearButtonMode = .always
-        textField.textColor = .systemGray4
         textField.backgroundColor = .white
         textField.textColor = .cyan
         textField.layer.borderColor = UIColor.black.cgColor
