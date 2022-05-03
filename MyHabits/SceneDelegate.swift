@@ -8,47 +8,32 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
-  
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         UITabBar.appearance().barTintColor = UIColor(patternImage: UIImage(named: "22")!)
-        
-
         UITabBar.appearance().tintColor = .purple
-        
-       
-        
         UINavigationBar.appearance().tintColor = .purple
-          guard let scene = (scene as? UIWindowScene) else { return }
-          window = UIWindow(windowScene: scene)
-          window?.makeKeyAndVisible()
-          let tabBarController = UITabBarController()
+        guard let scene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: scene)
+        window?.makeKeyAndVisible()
         let blur = UIBlurEffect(style: .regular)
-
-            let visualEffect = UIVisualEffectView(effect: blur)
+        let visualEffect = UIVisualEffectView(effect: blur)
         visualEffect.frame = CGRect(x: 0, y: 0, width: 768, height: 100)
-            visualEffect.translatesAutoresizingMaskIntoConstraints = false
-            visualEffect.layer.cornerRadius = 7
-            visualEffect.layer.masksToBounds = true
+        visualEffect.translatesAutoresizingMaskIntoConstraints = false
+        visualEffect.layer.cornerRadius = 7
+        visualEffect.layer.masksToBounds = true
+        let tabBarController = UITabBarController()
         tabBarController.tabBar.addSubview(visualEffect)
-      
-        
-        
-          let firstVC = HabitsViewController()
-       
-          firstVC.tabBarItem = UITabBarItem(title: "Приввычки", image: UIImage(systemName: "rectangle.grid.1x2.fill"), tag: 0)
-        
-        
-          let secondVC = InfoViewController()
-          secondVC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage(systemName: "info.circle.fill"), tag: 1)
-          let firstNavController = UINavigationController(rootViewController: firstVC)
-          firstNavController.navigationController?.navigationBar.prefersLargeTitles = true
-          let secNavController = UINavigationController(rootViewController: secondVC)
-          tabBarController.viewControllers = [firstNavController,secNavController]
-          window?.rootViewController = tabBarController
+        let firstVC = HabitsViewController()
+        firstVC.tabBarItem = UITabBarItem(title: "Приввычки", image: UIImage(systemName: "rectangle.grid.1x2.fill"), tag: 0)
+        let secondVC = InfoViewController()
+        secondVC.tabBarItem = UITabBarItem(title: "Информация", image: UIImage(systemName: "info.circle.fill"), tag: 1)
+        let firstNavController = UINavigationController(rootViewController: firstVC)
+        firstNavController.navigationController?.navigationBar.prefersLargeTitles = true
+        let secNavController = UINavigationController(rootViewController: secondVC)
+        tabBarController.viewControllers = [firstNavController,secNavController]
+        window?.rootViewController = tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

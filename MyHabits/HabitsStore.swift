@@ -16,7 +16,6 @@ public final class Habit: Codable {
     /// Время выполнения привычки.
     public var date: Date
     
-   
     /// Иконка для привычки
     public var icon: String
     

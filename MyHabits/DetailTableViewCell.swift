@@ -8,6 +8,5 @@
 import UIKit
 
 class DetailTableViewCell: UITableViewCell {
-
    let identifier = "CellID"
 }
