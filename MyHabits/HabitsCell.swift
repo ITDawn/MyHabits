@@ -9,6 +9,8 @@ import UIKit
 
 class HabitsCell: UICollectionViewCell {
     let identifier = "cellId"
+    var imageWidth = ""
+    var imageHeight = ""
     var cellTap: (() -> Void)?
     let textfield = NewHabitViewController().nameTextField
     private weak var delegate1: UpdateCollectionView?
@@ -104,6 +106,22 @@ class HabitsCell: UICollectionViewCell {
 
 extension HabitsCell {
     private func setupViews(){
+        let height = iconImage.bounds.height
+        self.imageHeight = String(format: "%.0f", Double(height))
+        let width = iconImage.bounds.width
+        self.imageWidth = String(format: "%.0f", Double(width))
+        let API = "https://picsum.photos/" + imageWidth + "/" + imageHeight
+        guard let apiURL = URL(string: API) else {
+            fatalError("some Error")
+        }
+        let session = URLSession(configuration: .default)
+        let task = session.dataTask(with: apiURL) {(data, response, error) in
+            guard let data = data, error == nil else { return }
+            DispatchQueue.main.async {
+                self.iconImage.image = UIImage(data: data)
+            }
+        }
+        task.resume()
         self.contentView.backgroundColor = UIColor(white: 0.3, alpha: 0.1)
         self.contentView.addSubview(nameLabel)
         self.contentView.addSubview(repeatLabel)
@@ -148,6 +166,9 @@ extension HabitsCell {
     /// Настройки для привычки, логика на установку аватара
      func configure(habit: Habit) {
         self.habit = habit
+        
+        
+
         nameLabel.textColor = self.habit.color
         nameLabel.text = self.habit.name
         everyDayLabel.text = self.habit.dateString
@@ -178,7 +199,12 @@ extension HabitsCell {
                                         iconImage.image = UIImage(named: "rickWatch")
                                         break
                                     } else {
-                                        iconImage.image = UIImage(named: "1")
+                                        print("LOAD")
+                                        
+
+                                
+                                        break
+//                                        iconImage.image = UIImage(named: "1")
                                     }
                                 }
                             }

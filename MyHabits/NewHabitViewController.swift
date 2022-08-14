@@ -31,7 +31,6 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     }()
     let timePicker: UIDatePicker = {
         let picker = UIDatePicker()
-        picker.addTarget(self, action: #selector(datePickerChanged(picker:)), for: .valueChanged)
         picker.datePickerMode = .time
         picker.preferredDatePickerStyle = .wheels
         picker.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +64,6 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Удалить привычку", for: .normal)
         button.tintColor = .red
-        button.addTarget(self, action: #selector(deleteHabit), for: .touchUpInside)
         return button
     }()
     private var nameLabel: UILabel = {
@@ -141,6 +139,8 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         let gesture = UITapGestureRecognizer(target: self, action: #selector(colorTapped))
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(textFieldTap(tapGestureRecognizer:)))
         let viewGesture = UITapGestureRecognizer(target: self, action: #selector(viewTap(tapGestureRecognizer:)))
+        deleteButton.addTarget(self, action: #selector(deleteHabit), for: .touchUpInside)
+        timePicker.addTarget(self, action: #selector(datePickerChanged(picker:)), for: .valueChanged)
         self.view.addGestureRecognizer(viewGesture)
         nameTextField.addGestureRecognizer(tapGesture)
         colorView.addGestureRecognizer(gesture)
@@ -157,7 +157,8 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         view.addSubview(circleImage)
         view.addSubview(deleteButton)
         view.backgroundColor = .systemGray5
-        self.title = "Создать"
+        self.navigationController?.navigationBar.backgroundColor = .systemGray5
+        title = "Создать"
         switch habitSet {
         case .createHabit: navigationController?.navigationItem.title = "Создать"
         case .editHabit:
@@ -211,7 +212,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     }
     /// Вызов pickerViewController
     @objc func colorTapped() {
-        self.present(picker, animated: true, completion: nil)
+        present(picker, animated: true, completion: nil)
     }
     
     public func colorPickerViewControllerDidSelectColor(_ viewController: UIColorPickerViewController) {
@@ -238,7 +239,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         }
         alertVC.addAction(cancelAction)
         alertVC.addAction(deleteAction)
-        self.present(alertVC, animated: true, completion: nil)
+        present(alertVC, animated: true, completion: nil)
     }
     /// Сохранение или изменение привычки
     @objc func saveTap(_ sender: Any) {
@@ -295,5 +296,11 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         }
         }
         pickedTimdeLabel.text = " \(dateFormatter.string(from: timePicker.date))"
+    }
+}
+
+extension NewHabitViewController: UITextFieldDelegate {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        nameTextField.placeholder = ""
     }
 }

@@ -49,10 +49,13 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
         super.viewDidLoad()
         setUpViews()
         print(self.view.frame.width)
-        //                HabitsStore.shared.habits.removeAll()
+                        HabitsStore.shared.habits.removeAll()
         tabBar()
     }
     override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    override func viewWillLayoutSubviews() {
         self.navigationController?.navigationItem.largeTitleDisplayMode = .always
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }
