@@ -14,6 +14,8 @@ enum HabitSet {
 }
 
 public class NewHabitViewController: UIViewController, UIColorPickerViewControllerDelegate {
+    
+    let networkCheck = Reachability()
     weak var delegate1: UpdateCollectionView?
     var delegate2: Callback?
     var habitSet = HabitSet.createHabit
@@ -29,6 +31,52 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    private let noticeLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 20, y: 0, width: 180, height: 45))
+        label.text = "ТЫ ЛОШАРА"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 17)
+        return label
+    }()
+    private let pushNoticeView: UIView = {
+        let view = UIView(frame: CGRect(x: 110, y: -20, width: 200, height: 50))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 20
+        view.isHidden = true
+        view.backgroundColor = .systemPink
+        return view
+    }()
+    private let refreshButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 110, y: 800, width: 200, height: 60))
+        button.backgroundColor = .green
+        button.layer.cornerRadius = 10
+        button.isHidden = true
+        button.addTarget(NewHabitViewController.self, action: #selector(saveTap(_:)), for: .touchUpInside)
+        button.setTitle("повторить попытку", for: .normal)
+        return button
+    }()
+    private let creationLabel: UILabel = {
+        
+        let label = UILabel(frame: CGRect(x: 130, y: 400, width: 200, height: 50))
+        label.text = "Мероприятие создается"
+        label.isHidden = true
+        return label
+    }()
+    
+    private let creationView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        view.layer.cornerRadius = 25
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let creationImageView: UIImageView = {
+        let view = UIImageView(frame: CGRect(x: 100, y: 200, width: 200, height: 200))
+        view.image = UIImage(named: "creation")
+        view.isHidden = true
+        return view
+    }()
+    
     let timePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .time
@@ -156,6 +204,12 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
         view.addSubview(pickedTimdeLabel)
         view.addSubview(circleImage)
         view.addSubview(deleteButton)
+        view.addSubview(creationView)
+        creationView.addSubview(creationImageView)
+        creationView.addSubview(creationLabel)
+        creationView.addSubview(refreshButton)
+        creationView.addSubview(pushNoticeView)
+        pushNoticeView.addSubview(noticeLabel)
         view.backgroundColor = .systemGray5
         self.navigationController?.navigationBar.backgroundColor = .systemGray5
         title = "Создать"
@@ -165,6 +219,7 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
             deleteButton.isHidden = false
             navigationController?.navigationItem.title = "Править"
         }
+        self.navigationItem.setHidesBackButton(true, animated: false)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(saveTap(_:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(back))
         let constraints = [
@@ -209,6 +264,9 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
             deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
         ]
         NSLayoutConstraint.activate(constraints)
+        creationView.frame = CGRect(x: view.frame.midX, y: view.frame.midY, width: 50, height: 50)
+        creationView.backgroundColor = .brown
+        creationView.isHidden = true
     }
     /// Вызов pickerViewController
     @objc func colorTapped() {
@@ -243,24 +301,79 @@ public class NewHabitViewController: UIViewController, UIColorPickerViewControll
     }
     /// Сохранение или изменение привычки
     @objc func saveTap(_ sender: Any) {
-        let habitStore = HabitsStore.shared
-        switch habitSet {
-        case .createHabit: do {
-            newHabit.name = nameTextField.text ?? ""
-            habitStore.habits.append(newHabit)
-            navigationController?.popViewController(animated: true)
-            dismiss(animated: true, completion: nil)
-            delegate1?.reloadView()
-        }
-        case .editHabit: do {
-            habitStore.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
-            newHabit.name = nameTextField.text ?? ""
-            newHabit.date = timePicker.date
-            habitStore.habits.append(newHabit)
-            delegate2?.callback()
-            dismiss(animated: true, completion: nil)
-            delegate1?.reloadView()
-        }
+        let serialQueue = DispatchQueue.main
+        serialQueue.async {
+            UIView.animateKeyframes(withDuration: 0.7, delay: 0, options: [],
+                                    animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) { [self] in
+                    self.navigationController!.navigationBar.layer.zPosition = -1
+                    self.tabBarController?.tabBar.layer.zPosition = -1
+                    creationView.frame = view.bounds
+                    creationView.isHidden = false
+                }
+            }, completion: {
+                finished in
+                UIView.animate(withDuration: 1) { [self] in
+                    self.creationImageView.isHidden = false
+                    self.creationLabel.isHidden = false
+                    self.pushNoticeView.isHidden = false
+                    serialQueue.asyncAfter(deadline: .now() + 1, execute: {
+                        serialQueue.asyncAfter(deadline: .now() , execute: { [self] in
+                            if networkCheck.isConnectedToNetwork() {
+                                let habitStore = HabitsStore.shared
+                                switch habitSet {
+                                case .createHabit: do {
+                                    newHabit.name = nameTextField.text ?? ""
+                                    habitStore.habits.append(newHabit)
+                                    navigationController?.popViewController(animated: true)
+                                    delegate1?.reloadView()
+                                }
+                                case .editHabit: do {
+                                    habitStore.habits.remove(at: HabitsStore.shared.habits.firstIndex(of: self.newHabit) ?? 0 )
+                                    newHabit.name = nameTextField.text ?? ""
+                                    newHabit.date = timePicker.date
+                                    habitStore.habits.append(newHabit)
+                                    delegate2?.callback()
+                                    self.navigationController?.popViewController(animated: true)
+                                    delegate1?.reloadView()
+                                }
+                                }
+                            } else {
+                                UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [],
+                                                        animations: {
+                                    UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) { [self] in
+                                        self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+                                        serialQueue.asyncAfter(wallDeadline: .now() + 0.3 , execute: {
+                                            UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: [], animations: {
+                                                self.pushNoticeView.frame = CGRect(x: 110, y: 140, width: 200, height: 50)
+                                            }, completion: {
+                                                finished in
+                                                self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+                                            })
+                                        })
+                                    }
+                                }, completion: {
+                                    finished in
+                                    UIView.animate(withDuration: 0.1) { [self] in
+                                        serialQueue.asyncAfter(wallDeadline: .now() + 0.5, execute: {
+                                            UIView.animate(withDuration: 0.2) { [self] in
+                                                self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+                                            }
+                                        })
+                                        serialQueue.asyncAfter(wallDeadline: .now() + 1, execute: {
+                                            UIView.animate(withDuration: 0.2) { [self] in
+                                                self.pushNoticeView.frame = CGRect(x: 110, y: -20, width: 200, height: 50)
+                                            }
+                                        })
+                                    }
+                                })
+                                creationLabel.text = "Ошибка соединения"
+                                refreshButton.isHidden = false
+                            }
+                        })
+                    })
+                }
+            })
         }
     }
     @objc func textFieldTap(tapGestureRecognizer: UITapGestureRecognizer) {

@@ -18,8 +18,23 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     private let backGroundView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(patternImage: UIImage(named: "44")!)
+//        view.backgroundColor = UIColor(patternImage: UIImage(named: "44")!)
         return view
+    }()
+    
+    private let pushNoticeView: UIView = {
+        let view = UIView(frame: CGRect(x: 110, y: -20, width: 200, height: 50))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 20
+        view.backgroundColor = .systemPink
+        return view
+    }()
+    private let noticeLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 20, y: 0, width: 180, height: 45))
+        label.text = "ЗАЕБИСЬ"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 17)
+        return label
     }()
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -57,16 +72,65 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     }
     override func viewWillLayoutSubviews() {
         self.navigationController?.navigationItem.largeTitleDisplayMode = .always
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     internal func reloadView() {
-        collectionView.reloadData()
+        let serialQueue = DispatchQueue.main
+        self.collectionView.reloadData()
+
+        serialQueue.asyncAfter(deadline: .now() + 2, execute: {
+            UIView.animateKeyframes(withDuration: 0.5, delay: 0, options: [],
+                                    animations: {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1) { [self] in
+                    self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+                    serialQueue.asyncAfter(wallDeadline: .now() + 0.3 , execute: {
+                        UIView.animateKeyframes(withDuration: 0.2, delay: 0, options: [], animations: {
+                            self.pushNoticeView.frame = CGRect(x: 110, y: 140, width: 200, height: 50)
+                        }, completion: {
+                            finished in
+                            self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+
+                        })
+                    })
+                }
+            }, completion: {
+                finished in
+                UIView.animate(withDuration: 0.1) { [self] in
+
+                    serialQueue.asyncAfter(wallDeadline: .now() + 0.5, execute: {
+                        UIView.animate(withDuration: 0.2) { [self] in
+                            self.pushNoticeView.frame = CGRect(x: 110, y: 150, width: 200, height: 50)
+
+                        }
+
+                    })
+                    serialQueue.asyncAfter(wallDeadline: .now() + 1, execute: {
+                        UIView.animate(withDuration: 0.2) { [self] in
+                            self.pushNoticeView.frame = CGRect(x: 110, y: -20, width: 200, height: 50)
+                            self.navigationController!.navigationBar.layer.zPosition = 0
+                            self.tabBarController?.tabBar.layer.zPosition = 0
+//                            self.tabBarController?.tabBar.backgroundColor = UIColor(patternImage: UIImage(named: "22")!)
+
+                            self.navigationController?.navigationBar.backgroundColor = .white
+ 
+                        }
+
+                    })
+                }
+            })
+
+
+        })
+        
+        
     }
     private func setUpViews() {
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         details.delegate1 = self
         view.addSubview(backGroundView)
+        view.addSubview(pushNoticeView)
+        pushNoticeView.addSubview(noticeLabel)
         backGroundView.addSubview(collectionView)
         self.view.backgroundColor = .white
         self.navigationItem.title = "Сегодня"
@@ -117,10 +181,12 @@ class HabitsViewController: UIViewController, UpdateCollectionView, UINavigation
     @objc func tap() {
         let vc = NewHabitViewController()
         vc.delegate1 = self
-        let rootVC = UINavigationController(rootViewController: vc)
-        rootVC.modalPresentationStyle = .overCurrentContext
-        rootVC.modalTransitionStyle = .crossDissolve
-        present(rootVC, animated: true, completion: nil)
+        navigationController?.pushViewController(vc, animated: true)
+
+//        let rootVC = UINavigationController(rootViewController: vc)
+//        rootVC.modalPresentationStyle = .overCurrentContext
+//        rootVC.modalTransitionStyle = .crossDissolve
+//        present(rootVC, animated: true, completion: nil)
     }
 }
 
